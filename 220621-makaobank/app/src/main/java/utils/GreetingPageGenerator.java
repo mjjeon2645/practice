@@ -1,13 +1,13 @@
 package utils;
 
-public class MessageGenerator {
+public class GreetingPageGenerator extends PageGenerator {
   private String name;
 
-  public MessageGenerator() {
+  public GreetingPageGenerator() {
     this.name = "world";
   }
 
-  public MessageGenerator(String name) {
+  public GreetingPageGenerator(String name) {
     if (name.isBlank()) {
       this.name = "world";
       return;
@@ -15,7 +15,8 @@ public class MessageGenerator {
     this.name = name;
   }
 
-  public String text() {
+  @Override
+  public String html() {
     return "Hello, " + name + "!";
   }
 }
