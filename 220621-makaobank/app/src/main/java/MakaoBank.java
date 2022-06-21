@@ -9,13 +9,16 @@
 // account 생성 -> messageGenerator -> pagegenerator로 변경하고 이를 추상화하여 사용
 // AccountPageGenerator에서 html 줄 것
 
+// 송금(transfer)
+// 1. transferPageGenerator 생성 -> html
+// 2. 송금처리 -> POST
+// 3. 송금결과 만들어주기
+// get과 post 처리 나누기
+
 
 import com.sun.net.httpserver.HttpServer;
 import models.Account;
-import utils.AccountPageGenerator;
-import utils.GreetingPageGenerator;
-import utils.PageGenerator;
-import utils.MessageWriter;
+import utils.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -37,15 +40,20 @@ public class MakaoBank {
       URI requestURI = exchange.getRequestURI();
       String path = requestURI.getPath();
 
+      String method = exchange.getRequestMethod();
+      Account account = new Account("1234", "Ashal", 3000);
+
       // 처리
-      PageGenerator pageGenerator = new GreetingPageGenerator();
 
-      if (path.equals("/account")) {
-        Account account = new Account("1234", "Ashal", 3000);
-         pageGenerator= new AccountPageGenerator(account);
-      }
+      PageGenerator pageGenerator = switch (path) {
+        case "/account" -> new AccountPageGenerator(account);
+        case "/transfer" -> method.equals("GET")
+            ? new TransferPageGenerator(account)
+            : new TransferProcessPageGenerator(account);
+        default -> new GreetingPageGenerator();
+        };
 
-      String content = pageGenerator.html();
+        String content = pageGenerator.html();
 
       // 출력
       MessageWriter messageWriter = new MessageWriter(exchange);
