@@ -18,19 +18,32 @@
 
 import com.sun.net.httpserver.HttpServer;
 import models.Account;
+import services.TransferService;
 import utils.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
+import java.util.List;
 
 public class MakaoBank {
+  private Account account;
+  private TransferService transferService;
+
   public static void main(String[] args) throws IOException {
     MakaoBank application = new MakaoBank();
     application.run();
   }
 
   public void run() throws IOException {
+    // TODO: 위치가 올바를까?
+    List<Account> accounts = List.of (
+        new Account("1234", "Ashal", 3000),
+        new Account("2345", "JOCKER", 1000)
+    );
+    account = accounts.get(0);
+    transferService = new TransferService(accounts);
+
     InetSocketAddress address = new InetSocketAddress(8000);
     HttpServer httpServer = HttpServer.create(address, 0);
 
@@ -41,19 +54,12 @@ public class MakaoBank {
       String path = requestURI.getPath();
 
       String method = exchange.getRequestMethod();
-      Account account = new Account("1234", "Ashal", 3000);
 
       // 처리
 
-      PageGenerator pageGenerator = switch (path) {
-        case "/account" -> new AccountPageGenerator(account);
-        case "/transfer" -> method.equals("GET")
-            ? new TransferPageGenerator(account)
-            : new TransferProcessPageGenerator(account);
-        default -> new GreetingPageGenerator();
-        };
+      PageGenerator pageGenerator = process(path, method);
 
-        String content = pageGenerator.html();
+      String content = pageGenerator.html();
 
       // 출력
       MessageWriter messageWriter = new MessageWriter(exchange);
@@ -62,5 +68,35 @@ public class MakaoBank {
 
     httpServer.start();
     System.out.println("http://localhost:8000/");
+  }
+
+  public PageGenerator process(String path, String method) {
+    return switch (path) {
+      case "/account" -> processAccount();
+      case "/transfer" -> processTransfer(method);
+      default -> new GreetingPageGenerator();
+    };
+  }
+
+  public AccountPageGenerator processAccount() {
+    return new AccountPageGenerator(account);
+  }
+
+  public PageGenerator processTransfer(String method) {
+    if (method.equals("GET")) {
+      return processTransferGet();
+    }
+
+   return processTransferPost();
+  }
+
+  public TransferPageGenerator processTransferGet() {
+    return new TransferPageGenerator(account);
+  }
+
+  public TransferSuccessPageGenerator processTransferPost() {
+    //TODO: 뭔가 진짜 처리
+    transferService.transfer("1234", "2345", 1000);
+    return new TransferSuccessPageGenerator(account);
   }
 }

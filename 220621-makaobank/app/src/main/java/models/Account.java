@@ -22,4 +22,9 @@ public class Account {
   public long amount() {
     return amount;
   }
+
+  // TODO: 받는 사람 처리 필요함
+  public void transfer(Account receiver, long amount) {
+    this.amount -= amount;
+  }
 }

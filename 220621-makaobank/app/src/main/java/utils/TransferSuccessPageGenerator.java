@@ -2,10 +2,10 @@ package utils;
 
 import models.Account;
 
-public class TransferProcessPageGenerator extends PageGenerator{
+public class TransferSuccessPageGenerator extends PageGenerator{
   private final Account account;
 
-  public TransferProcessPageGenerator(Account account) {
+  public TransferSuccessPageGenerator(Account account) {
     super();
     
     this.account = account;
@@ -13,6 +13,6 @@ public class TransferProcessPageGenerator extends PageGenerator{
 
   @Override
   public String content() {
-    return "";
+    return "계좌 이체 성공!";
   }
 }
