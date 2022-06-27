@@ -1,15 +1,20 @@
 package utils;
 
-import models.ListElement;
 
-public class ListPageGenerator extends PageGenerator{
+import models.Task;
 
-  private final ListElement listElement;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
-  public ListPageGenerator(ListElement listElement) {
+public class ListPageGenerator extends PageGenerator {
+  private final List<Task> tasks;
+
+  public ListPageGenerator(List<Task> tasks) {
     super();
 
-    this.listElement = listElement;
+    this.tasks = tasks;
   }
 
   @Override
@@ -25,12 +30,18 @@ public class ListPageGenerator extends PageGenerator{
         "<h1>TODO LIST</h1>\n" +
         "<form method=\"POST\" />" +
         "<span>Todo</span>\n" +
-        "<input type=\"text\" name=\"typedlist\" />\n" +
-        "<button type=\"submit\" name=\"create\">Create</button>\n" +
+        "<input type=\"text\" name=\"title\" />\n" +
+        "<button type=\"submit\">Create</button>\n" +
         "</form>" +
-        "<p>" + listElement.listByUser() + "\n" +
-        "<button type=\"submit\" name=\"delete\">X</button></p>\n" +
+        "<ul>" +
+        tasks() +
         "</body>\n" +
         "</html>";
+  }
+
+  public String tasks() {
+    return tasks.stream().map(task -> "<li>" + task.title() +
+            "<button type=\"submit\" name=\"delete\">X</button></p>\n" + "</li>\n")
+        .collect(Collectors.joining());
   }
 }

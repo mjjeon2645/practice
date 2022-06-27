@@ -1,12 +1,13 @@
 package utils;
 
-import models.ListElement;
+
+import models.Task;
 
 public class MainPageGenerator extends PageGenerator {
 
   @Override
   public String html() {
-    ListElement listElement = new ListElement("양치하기", 1);
+    Task task = new Task("양치하기", 1);
 
     return "" +
         "<!DOCTYPE html>\n" +
