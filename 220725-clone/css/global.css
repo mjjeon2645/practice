@@ -1,0 +1,39 @@
+:root {
+    --header-height: 60px;
+    --hero-height: 800px;
+    --promotion-height: 560px;
+    --footer-height: 140px;
+    --content-padding-inline: calc((100% - 1100px) / 2);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+h1, h2, h3 {
+    word-break: keep-all;
+}
+
+a {
+    text-decoration: none;
+}
+
+button {
+    border: none;
+    background: none;
+}
+
+blockquote::before {
+    display: block;
+    margin-bottom: -.6em;
+    content: """;
+}
+
+blockquote::after {
+    display: block;
+    content: """;
+}
