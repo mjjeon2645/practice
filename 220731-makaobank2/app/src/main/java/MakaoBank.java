@@ -1,10 +1,7 @@
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import models.Account;
-import utils.AccountPageGenerator;
-import utils.GreetingPageGenerator;
-import utils.PageGenerator;
-import utils.MessageWriter;
+import utils.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -27,12 +24,13 @@ public class MakaoBank {
       String path = requestURI.getPath();
 
       // 2. 처리
-      PageGenerator pageGenerator = new GreetingPageGenerator();
+      Account account = new Account("1234", "Ashal", 3000);
 
-      if (path.equals("/account")) {
-        Account account = new Account("1234", "Ashal", 3000);
-        pageGenerator = new AccountPageGenerator(account);
-      }
+      PageGenerator pageGenerator = switch (path) {
+        case "/account" -> new AccountPageGenerator(account);
+        case "/transfer" -> new TransferPageGenerator(account);
+        default -> new GreetingPageGenerator();
+      };
 
       String content = pageGenerator.html();
 
