@@ -1,8 +1,11 @@
+import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
+import utils.MessageGenerator;
+import utils.MessageWriter;
 
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
+import java.net.URI;
 
 public class MakaoBank {
   public static void main(String[] args) throws IOException {
@@ -16,31 +19,25 @@ public class MakaoBank {
     HttpServer httpServer = HttpServer.create(address, 0);
 
     httpServer.createContext("/", (exchange -> {
-      String content = "Hello, world!";
+      String name = nameFromPath(exchange);
 
-      exchange.sendResponseHeaders(200, content.getBytes().length);
+      MessageGenerator messageGenerator = new MessageGenerator(name);
+      String content = messageGenerator.text();
 
-      OutputStream outputStream = exchange.getResponseBody();
-
-      outputStream.write(content.getBytes());
-      outputStream.flush();
-      outputStream.close();
-    }));
-
-    httpServer.createContext("/ashal", (exchange -> {
-      String content = "Hello, Ashal!";
-
-      exchange.sendResponseHeaders(200, content.getBytes().length);
-
-      OutputStream outputStream = exchange.getResponseBody();
-
-      outputStream.write(content.getBytes());
-      outputStream.flush();
-      outputStream.close();
+      MessageWriter messageWriter = new MessageWriter(exchange);
+      messageWriter.write(content);
     }));
 
     httpServer.start();
 
     System.out.println("http://localhost:8000/");
+  }
+
+  public String nameFromPath(HttpExchange exchange) {
+    URI requestURI = exchange.getRequestURI();
+    String path = requestURI.getPath();
+
+    String name = path.substring(1);
+    return name;
   }
 }
