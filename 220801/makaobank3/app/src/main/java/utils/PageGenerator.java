@@ -10,9 +10,18 @@ public abstract class PageGenerator {
         "<title>마카오 뱅크</title>\n" +
         "</head>\n" +
         "<body>\n" +
+        navigation() +
         content() +
         "</body>\n" +
         "</html>";
+  }
+
+  public String navigation() {
+    return "<nav>\n" +
+        "<a href=\"/\">홈으로</a>\n" +
+        "<a href=\"/account\">잔액 조회</a>\n" +
+        "<a href=\"/transfer\">송금</a>\n" +
+        "</nav>";
   }
 
   public abstract String content();

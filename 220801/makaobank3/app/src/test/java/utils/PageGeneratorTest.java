@@ -16,6 +16,8 @@ class PageGeneratorTest {
 
    String html = pageGenerator.html();
 
-   assertTrue(html.contains("<a href=\"/\">홈으로"), "홈으로 버튼 문제");
+   assertTrue(html.contains("홈으로"), "홈으로 버튼 문제");
+    assertTrue(html.contains("잔액 조회"), "잔액 조회 버튼 문제");
+    assertTrue(html.contains("송금"), "송금 버튼 문제");
   }
 }
